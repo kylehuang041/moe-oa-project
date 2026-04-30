@@ -1,0 +1,1 @@
+export const webhookSecret = new sst.Secret("WebhookSecret");

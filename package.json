@@ -1,0 +1,27 @@
+{
+  "name": "marketplace-aggregator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bash ./scripts/run-with-aws.sh sst dev",
+    "build": "bash ./scripts/run-with-aws.sh sst build",
+    "deploy": "bash ./scripts/run-with-aws.sh sst deploy --stage prod",
+    "remove": "bash ./scripts/run-with-aws.sh sst remove --stage prod",
+    "typecheck": "tsc --noEmit",
+    "seed": "tsx scripts/seed.ts",
+    "reset-seed": "bash ./scripts/run-with-aws.sh tsx scripts/resetAndSeed.ts"
+  },
+  "devDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.500.0",
+    "@aws-sdk/client-sqs": "^3.500.0",
+    "@aws-sdk/lib-dynamodb": "^3.500.0",
+    "@types/node": "^20.11.0",
+    "sst": "^3.0.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.3.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

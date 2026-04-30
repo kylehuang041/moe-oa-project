@@ -1,0 +1,40 @@
+# Deliverable 1
+
+Context
+- Build a wrapper around third-party marketplaces
+- Let sellers list a product that can post one or more marketplaces at once
+- Have posts for commenting, questions, and price-change request
+- Have aggregated view of the posts in multiple marketplaces
+- Use mock data for the marketplace
+
+The problem
+- Simple UI wherre user can list their product: title, description, price, and optionally photos.
+- Backend API endpoint where they take the new listing to publish to mocked marketplace. It should support async, rate-limiter, and fails.
+- The marketplace should create an event to the seller if an item has been sold or new comment. This can be a second enpoint, a scheduled job, or a small script that fires a webhook at your system.
+- A persistence layer that stores listings and an aggregated activity feed per listing
+- A UI view that shows all the listings and their most recent activity.
+
+Additional Information
+- Fall Role
+- AI use is allowed
+- Tech stack: AWS SST, TypeScript, PostgreSQL, React Native (I'm going to use React.js since React Native is for mobile), Node.js
+
+## Option 1: API-Driven Application
+
+For option 1, I would create an API-driven system. I would create two mock marketplaces with their own API servers, then have my base API server that would link with the marketplace(s) to create/remove/archive product listings. So in this case, three API servers. As for the recommended techstack, I would use React.js for the UI; TypeScript for enhanced OOP and strictness; PostgreSQL for the marketplace product listings, users, and orders; and AWS SST for serverless deployment and management. A separate server for the website using React.js+TypeScript. I would use client-server, microservices, and MVC architecural styles for the codebase. For the product images, I would use S3 for the image storage and CloudFront for CDN for caching for fast image rendering.
+
+For the mocked database, I was thinking of using NoSQL since it's highly scalable and schemaless, and is recommended for e-commerce applications. For SQL, I would use it for payments and sensitive information, such as user information and invoice as it is is ACID compliant. Futhermore, the payments and orders would require strong consistency and partition tolerance for scalability. So, the product listing, I would use NoSQL like DynamoDB, CosmosDB, or MongoDB Atlas for example. For allowing a custom API endpoint to enlist/delist products, I would check for APIs from the official marketplaces if they have it to allow for app integration. With that, I can integrate that into my API server to replicate/remove listings to one or more marketplaces, which would require their account to be linked to the third party services to your account like with Steam, Epic Games, Twitch to receive rewards for example. Furthermore, the SQL will use master-slave architecture, so more read instances than write instances. For example, 1 master (write) with 3 slaves (reads). If the master fails, it would use temporarily use one of the read until it's up and running. For data recovery, create databases in more than one region/overseas for failover/backup. But as for this project, I would stick with PostgreSQL.
+
+On the frontend, I would create a dashboard for the aggregated feature that would show which are listed, sold, and removed into a temporary archive. Let's say someone removed a listing and the next day, he changed his mind and wanted to recreate the post without doing the whole process again, which can be mundane and time-consuming. But with the temporary archive of canceled/removed post, he can click on a single button to recover it. For mock data, I would create them on mockaroo.com, to autogenerate dummy data. For styling, I would use Tailwind CSS for compact and simplicity.
+
+For the rate limiting, I would use Redis pub/sub and PostgreSQL. Redis would be used for scalable user rate limiting and PostgresQL as the storage of the rules. So whenever, the developer or admin changes the rules, it would allow the Redis that are subscribe to the main Redis to publish to every single Redis nodes using Observer Pattern. For example, the user can only post a product within a 5 second timeframe, same with removing. So if they somehow made a malicious script, they could DDoS, but this would avoid that. Or use persistent queue like SQS, so if a requests times out, it could try again with workers (Lambda functions for lightweight tasks) to pop and process the requests.
+
+For the API endpoint for creating/removing listing, Node.js is preferred and in this case, I would use parallel requests for concurrency. For example, I could have it do 4 retries that could be 1, 2, 4, 8 seconds. The backend framework, I would use Express.js that supports async/await operations. Also, since this is a simple project, I would stick with Lambda functions for create/remove listings.
+
+For authentication, I'll use AWS SST using SST v3 and Kubernetes for scalable containers. Alternatively, I would use Clerk API as I have used it before with NoteNinjaCo, which is secure and easy to use for development.
+
+## Option 2: Agentic AI hybrid Application
+
+Option 2 would be base system into an agentic system that would integrate with the external marketplaces via tools. It would be a L3 agentic system that supports core reasoning system with LLM; support tools including APIs, databases, tools, and A2As; create and solve multi-step complex plan; and collaborate with a team of specialized agents working together. For example, use Google ADK for the development and testing, and Vertex AI for deployment and hosting. The frontend will stay the same using a serverless kubernetes service like Azure Container Apps. As for this project however would be AWS exclusive using AWS SST and AWS Bedrock, so like a hybrid system. I would setup a retry logic, up to 3 times for example and it would trigger if the eval or LLM-as-a-Judge found it wrong. If it has found that subagent A made an error, it would revert to the specific path and level along with the cache and memory to avoid hallucinating with the new critical information of the mistake it made, so it can learn and behave differently each time, to produce a newer and better solution. The agentic system would actually be split into multiple servers as the MCP architecture consists of MCP client and MCP server which are both scalable. The MCP client would act as a simple coordinator agent and the MCP servers containing different MCP services, which does the actual tasks, the heavy tasks. I would use the LLM-as-a-Judge for development testing and use 5% of production data to test. When creating a pull request, it would perform tests using the "golden dataset" that contains security risk, realistic user cases, and malformed inputs to stress the system. After the pull request has been verified, it would then be deployed onto a private cloud for stress testing with multiple servers and up and running to make sure it is compliant and working correctly with the pipelines. Lastly, the product owner would do a manual check for a Human-In-The-Loop (HITL) to verify one last time to post it onto production. The two previous steps will be automated. As for the user input and LLM output would use regex, ML model, or an agent to check for malicious input and make sure sensitive data doesn't get leaked out by redacting information for example. In the ADK, you can debug and test using their own framework to see the whole pipeline and actions of the agents to see if they are working properly for local testing. In this case, you would only need a single MCP client and tools to create/remove listings from the marketplace(s). For further development, add an AI-image service to find the product you are selling with a picture, a recommendation system using ML for the buyers from user wishlist and history, a chatbot for help users find what they want with descriptions and help find more information than what is written in the product details and overall reviews.
+
+For the project, I'll be choosing option 1 for simplicity and the least amount of fees.

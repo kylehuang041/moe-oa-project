@@ -1,0 +1,60 @@
+# Dependencies
+node_modules/
+
+# SST (local outputs, ephemeral state — secrets stored via `sst secret`, not files here)
+.sst/
+
+# Build outputs
+packages/web/dist/
+*.js.map
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.*.example
+
+# direnv — often exports real secrets locally
+.envrc
+
+# AWS — never commit raw credential files (even accidentally copied into the repo)
+.aws/credentials
+
+# PEM / keystores — private keys, certs, client auth bundles dropped in the tree
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# SSH private keys (by common filenames; *.pub stays trackable if needed)
+id_rsa
+id_ecdsa
+id_ed25519
+id_dsa
+
+# Obvious secret filenames
+*.secret
+secrets.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing
+coverage/
