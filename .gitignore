@@ -20,6 +20,11 @@ packages/web/dist/
 # AWS — never commit raw credential files (even accidentally copied into the repo)
 .aws/credentials
 
+# AWS CLI — install via OS/package manager or https://docs.aws.amazon.com/cli/; do not vendor the zip or unpacked bundle in the repo
+/aws/
+awscliv2.zip
+awscliv*.zip
+
 # PEM / keystores — private keys, certs, client auth bundles dropped in the tree
 *.pem
 *.key
