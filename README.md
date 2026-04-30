@@ -2,6 +2,8 @@
 
 A prototype marketplace aggregation system that lets sellers list products once and publish to multiple marketplaces, with an aggregated activity feed for sales, comments, and questions.
 
+Deployed URL: https://d2ff9ckwwp6byf.cloudfront.net/
+
 > **See also:** 
 > - [APPROACH.md](./APPROACH.md) — Summary of architecture, safety, and cost
 > - [docs/deliverable_1.md](./docs/deliverable_1.md) — Detailed approach document with eBay reference analysis
